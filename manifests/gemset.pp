@@ -31,22 +31,20 @@ define rvm::gemset(
     $root  = rvm_root ($real_environment)
 
     exec { "RVM[${real_environment}][${ruby}][${real_gemset}]: create":
-        logoutput => true,
-        provider  => 'shell',
-        user      => $user,
-        group     => $group,
-        command   => rvm_exec($real_environment, $ruby,
-                              ['rvm', 'gemset', 'create', $real_gemset]),
+        provider => 'shell',
+        user     => $user,
+        group    => $group,
+        command  => rvm_exec($real_environment, $ruby,
+                             ['rvm', 'gemset', 'create', $real_gemset]),
         unless   => "test -d ${root}/gems/${ruby}@${real_gemset}",
     } ->
 
     exec { "RVM[${real_environment}][${ruby}][${real_gemset}]: wrap":
-        logoutput => true,
-        provider  => 'shell',
-        user      => $user,
-        group     => $group,
-        command   => rvm_command($real_environment, 'wrapper',
-                                 ["${ruby}@${real_gemset}"]),
-        unless    => "test -x ${root}/wrappers/${ruby}@${real_gemset}/ruby",
+        provider => 'shell',
+        user     => $user,
+        group    => $group,
+        command  => rvm_command($real_environment, 'wrapper',
+                                ["${ruby}@${real_gemset}"]),
+        unless   => "test -x ${root}/wrappers/${ruby}@${real_gemset}/ruby",
     }
 }
